@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <title>选择时间</title>
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="time-choose.css">
+
+    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="mobiscroll/js/mobiscroll_002.js" type="text/javascript"></script>
+    <script src="mobiscroll/js/mobiscroll_004.js" type="text/javascript"></script>
+    <link href="mobiscroll/css/mobiscroll_002.css" rel="stylesheet" type="text/css">
+    <link href="mobiscroll/css/mobiscroll.css" rel="stylesheet" type="text/css">
+    <script src="mobiscroll/js/mobiscroll.js" type="text/javascript"></script>
+    <script src="mobiscroll/js/mobiscroll_003.js" type="text/javascript"></script>
+    <script src="mobiscroll/js/mobiscroll_005.js" type="text/javascript"></script>
+    <link href="mobiscroll/css/mobiscroll_003.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+    <div class="header">
+        <ul>
+            <li class="back col-xs-3"><a href="index.html">返回</a></li>
+            <li class="col-xs-6 mgt-12 text-center">选择时间</li>
+            <li class="finish col-xs-3"><a id="finish" href="analysis.html?type=2&startDate=&endDate=2">完成</a></li>
+        </ul>
+    </div>
+    <div id="choose">
+        <div class="choose date-choose"  href="#date" data-toggle="tab">按月选择<span></span><i></i></div>
+        <div class="choose month-choose" href="#month" data-toggle="tab">按日选择<span></span><i></i></div>
+        <div class="text">* 时间跨度不得超过30天</div>
+    </div>
+    <div class="tab-content">
+        <div  class="tab-pane fade in active" id="month">
+            <input class="date-value " id="startMonth" runat="server"  readonly="readonly" style="width:100%;" value="" />
+        </div>
+        <div  class="tab-pane fade  " id="date">
+            <input id="startDate" runat="server"  readonly="readonly" value="" />
+            至
+            <input id="endDate" runat="server"  readonly="readonly"  value="" />
+        </div>
+    </div>
+
+</body>
+
+<script>
+    var nowDate = getNowFormatDate();
+
+    var startYearDate = getYearAgo(nowDate);
+
+    var weekAgo = getWeekAgo();
+
+    $('#startMonth').val(nowDate.substring(0,7));//初始化日期
+
+
+
+    $('#startDate').val(weekAgo);//初始化日期
+
+    $('#endDate').val(nowDate);//初始化日期
+
+    $('#finish').attr('href','analysis.html?type=2&startDate='+ startYearDate +'&endDate='+ nowDate.substring(0,7)+'');//初始化链接
+
+
+    $(function(){
+        var currYear = (new Date()).getFullYear();
+        var opt={};
+        opt.date = {preset : 'date'};
+        opt.date1 = {preset : 'date'};
+        opt.date2 = {preset : 'date'};
+        opt.default1 = {
+            theme: 'android-ics light', //皮肤样式
+            display: 'bottom', //显示方式
+            mode: 'scroller', //日期选择模式
+            dateFormat: 'yy-mm',
+            lang: 'zh',
+//            showNow: true,
+            dateOrder:"yymm", //只显示月份
+//            nowText: "今天",
+            startYear: currYear - 10, //开始年份
+            endYear: currYear //结束年份
+        };
+        opt.default2 = {
+            theme: 'android-ics light', //皮肤样式
+            display: 'bottom', //显示方式
+            mode: 'scroller', //日期选择模式
+            dateFormat: 'yy-mm-dd',
+            lang: 'zh',
+//            showNow: true,
+//            dateOrder:"yymm", //只显示月份
+//            nowText: "今天",
+            startYear: currYear - 10, //开始年份
+            endYear: currYear //结束年份
+        };
+        $("#startMonth").mobiscroll($.extend(opt['date'], opt['default1']));//年月日型
+        $("#startDate").mobiscroll($.extend(opt['date1'], opt['default2']));
+        $("#endDate").mobiscroll($.extend(opt['date2'], opt['default2']));
+    });//配置时间控件
+
+
+    function getNowFormatDate() {
+
+        var date = new Date();
+        var date2 = new Date(date.getTime() - 7 * 24 * 3600 * 1000);
+        var seperator1 = "-";
+        var month = date.getMonth() + 1;
+        var strDate = date.getDate();
+        if (month >= 1 && month <= 9) {
+            month = "0" + month;
+        }
+        if (strDate >= 0 && strDate <= 9) {
+            strDate = "0" + strDate;
+        }
+        var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate;
+        return currentdate;
+    }//获取当前时间
+
+//    var time = '2017-04-02';
+//
+//    var t = getMonthAgo(time);
+//    console.log(t);
+
+    function getMonthAgo(time) {
+
+        var now = new Date(time);
+        var date = new Date(now.getTime() - 30 * 24 * 3600 * 1000);
+        var seperator1 = "-";
+        var month = date.getMonth() + 1;
+        var strDate = date.getDate();
+        if (month >= 1 && month <= 9) {
+            month = "0" + month;
+        }
+        if (strDate >= 0 && strDate <= 9) {
+            strDate = "0" + strDate;
+        }
+        var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate;
+        return currentdate;
+    }//获取一月前时间
+
+    function getWeekAgo() {
+
+        var now = new Date();
+        var date = new Date(now.getTime() - 7 * 24 * 3600 * 1000);
+        var seperator1 = "-";
+        var month = date.getMonth() + 1;
+        var strDate = date.getDate();
+        if (month >= 1 && month <= 9) {
+            month = "0" + month;
+        }
+        if (strDate >= 0 && strDate <= 9) {
+            strDate = "0" + strDate;
+        }
+        var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate;
+        return currentdate;
+    }//获取一周前时间
+
+    function getYearAgo(time) {
+
+        var now = new Date(time);
+        var date = new Date(now.getTime() - 12 * 30 * 24 * 3600 * 1000);
+        var seperator1 = "-";
+        var month = date.getMonth() + 1;
+        var strDate = date.getDate();
+        if (month >= 1 && month <= 9) {
+            month = "0" + month;
+        }
+        if (strDate >= 0 && strDate <= 9) {
+            strDate = "0" + strDate;
+        }
+        var currentdate = date.getFullYear() + seperator1 + month;
+        return currentdate;
+    }//获取一年前时间
+
+    $('.choose').click(function () {
+        $('.choose').css('display','inline-block');
+        $(this).toggle();
+    });//切换日月选择
+
+//    $('ul').on('click','li:not(".no-hover") a',function(){
+//        $('a').removeClass('aside-active');
+//        $(this).addClass('aside-active')
+//    })
+
+    $('#choose').on('click','.date-choose',function () {
+        var startDate = $('#startDate').val();
+        var endDate = $('#endDate').val();
+        $('#finish').attr('href','analysis.html?type=1&startDate='+startDate+'&endDate='+endDate +'')
+    });
+    $('#choose').on('click','.month-choose',function () {
+        var endDate = $('#startMonth').val();
+        var startDate = getYearAgo(endDate);
+        $('#finish').attr('href','analysis.html?type=2&startDate='+ startDate +'&endDate='+ endDate+'');
+    });
+
+    //日期改变时更改链接参数
+    $('#startMonth').change(function () {
+        var endDate = $('#startMonth').val();
+        var startDate = getYearAgo(endDate);
+        $('#finish').attr('href','analysis.html?type=2&startDate='+ startDate +'&endDate='+ endDate+'');
+    });
+    $('#startDate').change(function () {
+        $('.text').css('display','none');
+        var startDate = $('#startDate').val();
+        var endDate = $('#endDate').val();
+        var limtTime= 30 * 24 * 3600 * 1000;
+        var startTime = new Date(startDate);
+        startTime = startTime.getTime();
+        var endTime = new Date(endDate);
+        endTime = endTime.getTime();
+        if(endTime<startTime){
+            $('.text').css('display','inline-block');
+            $('.text').text('*结束时间不得小于起始时间');
+            startDate = endDate;
+            $('#startDate').val(endDate)
+        }
+        if(endTime-startTime>limtTime){
+            $('.text').css('display','inline-block');
+            $('.text').text('*选择时间跨度不能超过30天');
+            startDate = getMonthAgo(endDate);
+            $('#startDate').val(startDate)
+        }
+        $('#finish').attr('href','analysis.html?type=1&startDate='+startDate+'&endDate='+endDate +'')
+    });
+    $('#endDate').change(function () {
+        $('.text').css('display','none');
+        var startDate = $('#startDate').val();
+        var endDate = $('#endDate').val();
+        var limtTime= 30 * 24 * 3600 * 1000;
+        var startTime = new Date(startDate);
+        startTime = startTime.getTime();
+        var endTime = new Date(endDate);
+        endTime = endTime.getTime();
+        var nowTime = new Date(nowDate);
+        nowTime = nowTime.getTime();
+        if(endTime>nowTime){
+            $('.text').css('display','inline-block');
+            $('.text').text('*结束时间不得超过当天');
+            endDate = nowDate;
+            $('#endDate').val(endDate);
+        }
+        if(endTime<startTime){
+            $('.text').css('display','inline-block');
+            $('.text').text('*结束时间不得小于起始时间');
+            startDate = endDate;
+            $('#startDate').val(endDate)
+        }
+        if(endTime-startTime>limtTime){
+            $('.text').css('display','inline-block');
+            $('.text').text('*选择时间跨度不能超过30天');
+            startDate = getMonthAgo(endDate);
+            $('#startDate').val(startDate)
+        }
+        $('#finish').attr('href','analysis.html?type=1&startDate='+startDate+'&endDate='+endDate +'')
+    })
+</script>
+</html>
