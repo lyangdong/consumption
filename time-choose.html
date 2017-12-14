@@ -154,10 +154,10 @@
         return currentdate;
     }//获取一周前时间
 
-    function getYearAgo(time) {
+    function getHalfYearAgo(time) {
 
         var now = new Date(time);
-        var date = new Date(now.getTime() - 12 * 30 * 24 * 3600 * 1000);
+        var date = new Date(now.getTime() - 6 * 30 * 24 * 3600 * 1000);
         var seperator1 = "-";
         var month = date.getMonth() + 1;
         var strDate = date.getDate();
@@ -188,7 +188,7 @@
     });
     $('#choose').on('click','.month-choose',function () {
         var endDate = $('#startMonth').val();
-        var startDate = getYearAgo(endDate);
+        var startDate = getHalfYearAgo(endDate);
         $('#finish').attr('href','analysis.html?type=2&startDate='+ startDate +'&endDate='+ endDate+'');
     });
 
