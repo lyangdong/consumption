@@ -13,38 +13,40 @@
     <script src="https://cdn.bootcss.com/echarts/3.7.2/echarts.min.js"></script>
 </head>
 <body>
-    <div class="header">
-        <ul>
-            <li class="back col-xs-3"><a href="time-choose.html">返回</a></li>
-            <li class="analysis-title">统计分析</li>
-        </ul>
-        <div style="clear: both;"></div>
-    </div>
-    <div class="formBox">
-        <div class="form-date">2017-12-7</div>
-        <div class="form-title"><span></span>消费趋势</div>
-        <div id ="dateForm" style="width:100%;height: 170px;" class="col-xs-12 mgt-12"></div>
-    </div>
-    <div class="">
-        <div class="form-title"><span></span>总消费</div>
-        <div class="circle-title">-800</div>
-        <div id ="dateCircle" style="width:100%;height: 240px;" class="col-xs-12 mgt-12"></div>
-    </div>
+<div class="header">
+    <ul>
+        <li class="back col-xs-3"><a href="time-choose.html">返回</a></li>
+        <li class="analysis-title">统计分析</li>
+    </ul>
+    <div style="clear: both;"></div>
+</div>
+<div class="formBox">
+    <div class="form-date">2017-12-7</div>
+    <div class="form-title"><span></span>消费趋势</div>
+    <div id ="dateForm" style="width:100%;height: 170px;" class="col-xs-12 mgt-12"></div>
+</div>
+<div class="">
+    <div class="form-title"><span></span>总消费</div>
+    <div class="circle-title">-800</div>
+    <div id ="dateCircle" style="width:100%;height: 240px;" class="col-xs-12 mgt-12"></div>
+</div>
 </body>
 
 <script>
     var IP ='http://192.168.0.180:8080';
     var openid =1511424125228100;
-
+    var obj  = getUrlParams();
+    openid = obj.openid;
+    $('.header li a').attr('href','time-choose.html?openid='+openid +'');
     getFormdata();
     getCircle();
 
-//    var obj = getUrlParams();
+    //    var obj = getUrlParams();
 //    console.log(obj);
     function getFormdata() {
-        var obj  = getUrlParams();
         if(obj.type == 1){
-            var formType = '日'
+            var formType = '日';
+            var endDate = obj.endDate;
         }else {
             formType = '月';
             var time = new Date(obj.endDate);
@@ -167,7 +169,7 @@
                 alert("通知列表请求失败，请检查网络")
             }
         });
-    }        
+    }
 
     function getCircle() {
         $.ajax({

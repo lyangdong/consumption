@@ -20,58 +20,61 @@
     <link href="mobiscroll/css/mobiscroll_003.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-    <div class="header">
-        <ul class="header-list col-xs-12 no-padding">
-            <li class="col-xs-3 text-center"><a href="recharge.html">
-                <span class="recharge"></span>
-                充值
-            </a></li>
-            <li class="col-xs-6 text-center"><a href="javascript:void (0)">
+<div class="header">
+    <ul class="header-list col-xs-12 no-padding">
+        <li class="col-xs-3 text-center"><a href="recharge.html">
+            <span class="recharge"></span>
+            充值
+        </a></li>
+        <li class="col-xs-6 text-center"><a href="javascript:void (0)">
                 <span class="text-center balance">
                     <div>余额</div>
                     <div class="balance-number"></div>
                 </span>
-            </a></li>
-            <li class="col-xs-3 text-center"><a href="time-choose.html">
-               <span class="statistics"></span>
-                统计
-            </a></li>
-        </ul>
-    </div>
-    <div class="nav">
-        <ul>
-            <li class="col-xs-3 text-left noP-aside"><a href="javascript:void (0)">账单类型<span class=""></span></a></li>
-            <li class="col-xs-6 text-center noP-aside"><a href="javascript:void (0)">交易地点<span class=""></span></a></a></li>
-            <li class="col-xs-3 text-right noP-aside"><a href="javascript:void (0)">交易金额<span class=""></span></a></a></li>
-        </ul>
-    </div>
-    <div class="content-list">
-        <div class="box-title">
-            <span class="title-time">今日消费</span>
-            <span>
+        </a></li>
+        <li class="col-xs-3 text-center"><a href="time-choose.html">
+            <span class="statistics"></span>
+            统计
+        </a></li>
+    </ul>
+</div>
+<div class="nav">
+    <ul>
+        <li class="col-xs-3 text-left noP-aside"><a href="javascript:void (0)">账单类型<span class=""></span></a></li>
+        <li class="col-xs-6 text-center noP-aside"><a href="javascript:void (0)">交易地点<span class=""></span></a></a></li>
+        <li class="col-xs-3 text-right noP-aside"><a href="javascript:void (0)">交易金额<span class=""></span></a></a></li>
+    </ul>
+</div>
+<div class="content-list">
+    <div class="box-title">
+        <span class="title-time">今日消费</span>
+        <span>
                 <input id="EndDate" runat="server"  readonly="readonly" style="width:30%;" value="123" />
             </span>
-        </div>
-        <ul>
-            <!--<li class="statistics-box">-->
-                <!--<div class="box-content">-->
-                   <!--<div class="type bg-1 noP-aside">食</div>-->
-                   <!--<div class=" details">-->
-                       <!--<div class="address">食堂1号消费窗口</div>-->
-                       <!--<div class="time">12月3号 17:00</div>-->
-                   <!--</div>-->
-                   <!--<div class="money">- 2000</div>-->
-                    <!--<div style="clear: both"></div>-->
-                <!--</div>-->
-            <!--</li>-->
-        </ul>
     </div>
+    <ul>
+        <!--<li class="statistics-box">-->
+        <!--<div class="box-content">-->
+        <!--<div class="type bg-1 noP-aside">食</div>-->
+        <!--<div class=" details">-->
+        <!--<div class="address">食堂1号消费窗口</div>-->
+        <!--<div class="time">12月3号 17:00</div>-->
+        <!--</div>-->
+        <!--<div class="money">- 2000</div>-->
+        <!--<div style="clear: both"></div>-->
+        <!--</div>-->
+        <!--</li>-->
+    </ul>
+</div>
 </body>
 <script type="text/javascript">
+    var obj =getUrlParams();
     var IP ='http://192.168.0.180:8080';
-    var openid =1511424125228100;
+    var openid =obj.openid;
+
+    $('.header-list li:last-child a').attr('href','time-choose.html?openid='+openid);
     var nowDate = getNowFormatDate();
-//    console.log(nowDate)
+    //    console.log(nowDate)
     consumptionRecord(nowDate);
     getBalance();
 
@@ -122,7 +125,7 @@
         var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate;
         return currentdate;
     }//获取当前时间
-    
+
     function consumptionRecord(date) {
         $.ajax({
             type:'get',
@@ -188,7 +191,7 @@
             }
         });
     }//获取消费记录
-    
+
     function getBalance() {
         $.ajax({
             type:'get',
@@ -203,7 +206,7 @@
             success:function (res){
                 var data =res.data;
                 if(!data){
-                    data=0
+                    data='?';
                 }
                 $('.balance-number').text(data)
             },
@@ -211,6 +214,20 @@
                 alert("通知列表请求失败，请检查网络")
             }
         });
+    }
+    function getUrlParams() {
+        var queryString = window.location.search.substr(1);
+
+        var argsArr = queryString.split('&');
+        if (argsArr[0] === '') {
+            argsArr.shift();
+        }
+        var argsObj = {};
+        for (var i = 0; i < argsArr.length; i++) {
+            var args = argsArr[i].split('=');
+            argsObj[args[0]] = args[1];
+        }
+        return argsObj;
     }
 </script>
 </html>

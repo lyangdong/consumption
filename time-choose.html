@@ -19,32 +19,34 @@
     <link href="mobiscroll/css/mobiscroll_003.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-    <div class="header">
-        <ul>
-            <li class="back col-xs-3"><a href="index.html">返回</a></li>
-            <li class="col-xs-6 mgt-12 text-center">选择时间</li>
-            <li class="finish col-xs-3"><a id="finish" href="analysis.html?type=2&startDate=&endDate=2">完成</a></li>
-        </ul>
+<div class="header">
+    <ul>
+        <li class="back col-xs-3"><a href="ecard.html">返回</a></li>
+        <li class="col-xs-6 mgt-12 text-center">选择时间</li>
+        <li class="finish col-xs-3"><a id="finish" href="analysis.html?type=2&startDate=&endDate=2">完成</a></li>
+    </ul>
+</div>
+<div id="choose">
+    <div class="choose date-choose"  href="#date" data-toggle="tab">按月选择<span></span><i></i></div>
+    <div class="choose month-choose" href="#month" data-toggle="tab">按日选择<span></span><i></i></div>
+    <div class="text">* 时间跨度不得超过30天</div>
+</div>
+<div class="tab-content">
+    <div  class="tab-pane fade in active" id="month">
+        <input class="date-value " id="startMonth" runat="server"  readonly="readonly" style="width:100%;" value="" />
     </div>
-    <div id="choose">
-        <div class="choose date-choose"  href="#date" data-toggle="tab">按月选择<span></span><i></i></div>
-        <div class="choose month-choose" href="#month" data-toggle="tab">按日选择<span></span><i></i></div>
-        <div class="text">* 时间跨度不得超过30天</div>
+    <div  class="tab-pane fade  " id="date">
+        <input id="startDate" runat="server"  readonly="readonly" value="" />
+        至
+        <input id="endDate" runat="server"  readonly="readonly"  value="" />
     </div>
-    <div class="tab-content">
-        <div  class="tab-pane fade in active" id="month">
-            <input class="date-value " id="startMonth" runat="server"  readonly="readonly" style="width:100%;" value="" />
-        </div>
-        <div  class="tab-pane fade  " id="date">
-            <input id="startDate" runat="server"  readonly="readonly" value="" />
-            至
-            <input id="endDate" runat="server"  readonly="readonly"  value="" />
-        </div>
-    </div>
+</div>
 
 </body>
 
 <script>
+    var obj =getUrlParams();
+
     var nowDate = getNowFormatDate();
 
     var startYearDate = getHalfYearAgo(nowDate);
@@ -53,15 +55,13 @@
 
     $('#startMonth').val(nowDate.substring(0,7));//初始化日期
 
-
-
     $('#startDate').val(weekAgo);//初始化日期
 
     $('#endDate').val(nowDate);//初始化日期
 
-    $('#finish').attr('href','analysis.html?type=2&startDate='+ startYearDate +'&endDate='+ nowDate.substring(0,7)+'');//初始化链接
+    $('#finish').attr('href','analysis.html?type=2&startDate='+ startYearDate +'&endDate='+ nowDate.substring(0,7)+'&openid='+obj.openid +'');//初始化链接
 
-
+    $('.back a').attr('href','ecard.html?openid='+obj.openid +'');
     $(function(){
         var currYear = (new Date()).getFullYear();
         var opt={};
@@ -115,10 +115,10 @@
         return currentdate;
     }//获取当前时间
 
-//    var time = '2017-04-02';
-//
-//    var t = getMonthAgo(time);
-//    console.log(t);
+    //    var time = '2017-04-02';
+    //
+    //    var t = getMonthAgo(time);
+    //    console.log(t);
 
     function getMonthAgo(time) {
 
@@ -171,32 +171,47 @@
         return currentdate;
     }//获取一年前时间
 
+    function getUrlParams() {
+        var queryString = window.location.search.substr(1);
+
+        var argsArr = queryString.split('&');
+        if (argsArr[0] === '') {
+            argsArr.shift();
+        }
+        var argsObj = {};
+        for (var i = 0; i < argsArr.length; i++) {
+            var args = argsArr[i].split('=');
+            argsObj[args[0]] = args[1];
+        }
+        return argsObj;
+    }
+
     $('.choose').click(function () {
         $('.choose').css('display','inline-block');
         $(this).toggle();
     });//切换日月选择
 
-//    $('ul').on('click','li:not(".no-hover") a',function(){
-//        $('a').removeClass('aside-active');
-//        $(this).addClass('aside-active')
-//    })
+    //    $('ul').on('click','li:not(".no-hover") a',function(){
+    //        $('a').removeClass('aside-active');
+    //        $(this).addClass('aside-active')
+    //    })
 
     $('#choose').on('click','.date-choose',function () {
         var startDate = $('#startDate').val();
         var endDate = $('#endDate').val();
-        $('#finish').attr('href','analysis.html?type=1&startDate='+startDate+'&endDate='+endDate +'')
+        $('#finish').attr('href','analysis.html?type=1&startDate='+startDate+'&endDate='+endDate +'&openid='+obj.openid +'')
     });
     $('#choose').on('click','.month-choose',function () {
         var endDate = $('#startMonth').val();
         var startDate = getHalfYearAgo(endDate);
-        $('#finish').attr('href','analysis.html?type=2&startDate='+ startDate +'&endDate='+ endDate+'');
+        $('#finish').attr('href','analysis.html?type=2&startDate='+ startDate +'&endDate='+ endDate+'&openid='+obj.openid +'');
     });
 
     //日期改变时更改链接参数
     $('#startMonth').change(function () {
         var endDate = $('#startMonth').val();
-        var startDate = getYearAgo(endDate);
-        $('#finish').attr('href','analysis.html?type=2&startDate='+ startDate +'&endDate='+ endDate+'');
+        var startDate = getHalfYearAgo(endDate);
+        $('#finish').attr('href','analysis.html?type=2&startDate='+ startDate +'&endDate='+ endDate+'&openid='+obj.openid +'');
     });
     $('#startDate').change(function () {
         $('.text').css('display','none');
@@ -219,7 +234,7 @@
             startDate = getMonthAgo(endDate);
             $('#startDate').val(startDate)
         }
-        $('#finish').attr('href','analysis.html?type=1&startDate='+startDate+'&endDate='+endDate +'')
+        $('#finish').attr('href','analysis.html?type=1&startDate='+startDate+'&endDate='+endDate+'&openid='+obj.openid +'')
     });
     $('#endDate').change(function () {
         $('.text').css('display','none');
@@ -250,7 +265,7 @@
             startDate = getMonthAgo(endDate);
             $('#startDate').val(startDate)
         }
-        $('#finish').attr('href','analysis.html?type=1&startDate='+startDate+'&endDate='+endDate +'')
+        $('#finish').attr('href','analysis.html?type=1&startDate='+startDate+'&endDate='+endDate+'&openid='+obj.openid +'')
     })
 </script>
 </html>
