@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <title>充值失败</title>
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/recharge-common.css">
+
+</head>
+<body>
+<div class="error">
+    <div class="recharge-title"></div>
+    <div class="recharge-content">
+        <div class="content-info">
+            <img src="../img/error.png" alt="">
+            <span>充值失败</span>
+        </div>
+    </div>
+    <div class="recharge-footer">
+        <a type="button" class="back-btn">返回首页</a>
+    </div>
+</div>
+</body>
+<script>
+    $(function () {
+        var obj = getUrlParams();
+        $('.back-btn').attr('href','ecard.html?openid='+obj.openid)
+    });
+
+    function getUrlParams() {
+        var queryString = window.location.search.substr(1);
+
+        var argsArr = queryString.split('&');
+        if (argsArr[0] === '') {
+            argsArr.shift();
+        }
+        var argsObj = {};
+        for (var i = 0; i < argsArr.length; i++) {
+            var args = argsArr[i].split('=');
+            argsObj[args[0]] = args[1];
+        }
+        return argsObj;
+    }
+</script>
+</html>

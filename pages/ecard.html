@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <title>消费记录</title>
+
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+
+    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="../mobiscroll/js/mobiscroll_002.js" type="text/javascript"></script>
+    <script src="../mobiscroll/js/mobiscroll_004.js" type="text/javascript"></script>
+    <link href="../mobiscroll/css/mobiscroll_002.css" rel="stylesheet" type="text/css">
+    <link href="../mobiscroll/css/mobiscroll.css" rel="stylesheet" type="text/css">
+    <script src="../mobiscroll/js/mobiscroll.js" type="text/javascript"></script>
+    <script src="../mobiscroll/js/mobiscroll_003.js" type="text/javascript"></script>
+    <script src="../mobiscroll/js/mobiscroll_005.js" type="text/javascript"></script>
+    <link href="../mobiscroll/css/mobiscroll_003.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<div class="header">
+    <ul class="header-list col-xs-12 no-padding">
+        <li class="col-xs-3 text-center"><a href="recharge.html">
+            <span class="recharge"></span>
+            充值
+        </a></li>
+        <li class="col-xs-6 text-center"><a href="javascript:void (0)">
+                <span class="text-center balance">
+                    <div>余额</div>
+                    <div class="balance-number"></div>
+                </span>
+        </a></li>
+        <li class="col-xs-3 text-center"><a href="time-choose.html">
+            <span class="statistics"></span>
+            统计
+        </a></li>
+    </ul>
+    <div class="help"><a href="help.html">对余额有疑问</a></div>
+</div>
+<div class="nav">
+    <ul>
+        <li class="col-xs-3 text-left noP-aside sort-type">
+            <a href="javascript:void (0)">账单类型<span class="triangle"></span></a>
+            <div class="show-type">
+                <ul>
+                    <li>
+                        <label for="allType" class="active">全部</label>
+                        <input type="radio" name="type" value="0" id="allType" checked>
+                    </li>
+                    <li>
+                        <label for="useType">消费</label>
+                        <input type="radio" name="type" value="1" id="useType">
+                    </li>
+                    <li>
+                        <label for="reType">充值</label>
+                        <input type="radio" name="type" value="2" id="reType">
+                    </li>
+                </ul>
+            </div>
+        </li>
+        <li class="col-xs-6 text-center noP-aside"><a href="javascript:void (0)">交易地点<span class="triangle"></span></a></li>
+        <li class="col-xs-3 text-right noP-aside sort-money top"><a href="javascript:void (0)">交易金额<span class="triangle"></span></a></li>
+    </ul>
+</div>
+<div class="content-list">
+    <div class="box-title box-title-first">
+        <span class="title-time now">今日消费</span>
+        <span>
+            <input id="EndDate" runat="server"  readonly="readonly" style="width:30%;" value="123" />
+        </span>
+    </div>
+    <ul>
+        <!--<li class="statistics-box">-->
+        <!--<div class="box-content">-->
+        <!--<div class="type bg-1 noP-aside">食</div>-->
+        <!--<div class=" details">-->
+        <!--<div class="address">食堂1号消费窗口</div>-->
+        <!--<div class="time">12月3号 17:00</div>-->
+        <!--</div>-->
+        <!--<div class="money">- 2000</div>-->
+        <!--<div style="clear: both"></div>-->
+        <!--</div>-->
+        <!--</li>-->
+    </ul>
+</div>
+<div class="more">
+    <span>加载更多...</span>
+    <div class="spinner">
+        <div class="spinner-container container1">
+            <div class="circle1"></div>
+            <div class="circle2"></div>
+            <div class="circle3"></div>
+            <div class="circle4"></div>
+        </div>
+        <div class="spinner-container container2">
+            <div class="circle1"></div>
+            <div class="circle2"></div>
+            <div class="circle3"></div>
+            <div class="circle4"></div>
+        </div>
+        <div class="spinner-container container3">
+            <div class="circle1"></div>
+            <div class="circle2"></div>
+            <div class="circle3"></div>
+            <div class="circle4"></div>
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript">
+    var nowDate = getNowFormatDate();
+    var obj =getUrlParams();
+//    var IP ='http://192.168.0.180:8080';
+        var IP ='http://120.78.195.17:8080';
+    var openid =obj.openid;
+    var page = 31;
+    var oneDay = getDayAgo(nowDate);
+    var titleHeight =0;
+    sessionStorage.openid = obj.openid;
+    //    var moreHeight =  $('.more').offset().top;
+    //    var heightScroll = $(document).scrollTop()+$(window).height();
+    //    console.log($(document).scrollTop());
+
+    $('#EndDate').val(nowDate);
+    $('.header-list li:first-child a').attr('href','recharge.html?openid='+openid);
+    $('.header-list li:last-child a').attr('href','time-choose.html?openid='+openid);
+    //    var arr = ['01','03','05','07','08','10','12'];
+    //    console.log(nowDate)
+    //    consumptionRecord(nowDate);
+
+    getBalance();
+
+    $(function(){
+//        console.log( $('.more').offset().top);
+        var currYear = (new Date()).getFullYear();
+        var opt={};
+        opt.date = {preset : 'date'};
+        opt.datetime = {preset : 'datetime'};
+        opt.time = {preset : 'time'};
+        opt.default = {
+            theme: 'android-ics light', //皮肤样式
+            display: 'modal', //显示方式
+            mode: 'scroller', //日期选择模式
+            dateFormat: 'yy-mm-dd',
+            lang: 'zh',
+//            showNow: true,
+            dateOrder:"yymm", //只显示月份
+//            nowText: "今天",
+            startYear: currYear - 5, //开始年份
+            endYear: currYear //结束年份
+        };
+
+        $("#EndDate").mobiscroll($.extend(opt['date'], opt['default']));//年月日型
+
+        if(nowDate.substr(-2,2) !='01' && nowDate.substr(-2,2)<10){
+            getList(oneDay.substr(-1,2));
+        }else if(nowDate.substr(-2,2) !='01' && nowDate.substr(-2,2)>9){
+            getList(oneDay.substr(-2,2));
+        } else {
+            getList(nowDate.substr(-1,2));
+        }
+
+        $('#EndDate').change(function () {
+            $('.more span').text('加载更多...');
+            $('.spinner').fadeIn();
+            add =(function () {
+                var count = 0;
+                return function () {
+                    return count++;
+                }
+            })();
+            if($('#EndDate').val().substr(5,2)==nowDate.substr(5,2)){
+                $('.now').text('今日消费');
+            }
+//        console.log($('#EndDate').val());
+            page =31;
+            $('.content-list ul li').remove();
+            $('.box-title-last').remove();
+            getList(page);
+//        console.log($('#EndDate').val());
+//        console.log(j);
+//       console.log(date)
+        });//选择月份展示
+
+        $('.sort-money').click(function () {
+            add =(function () {
+                var count = 0;
+                return function () {
+                    return count++;
+                }
+            })();
+            $('.spinner').fadeIn();
+//            console.log( $('.sort-money').find('span'));
+            $('.sort-money').find('span').toggleClass('triangle-bottom');
+            $(this).toggleClass('.top');
+            page =31;
+            if($('#EndDate').val().substr(5,2)==nowDate.substr(5,2)){
+                page = oneDay.substr(-2,2);
+                $('.now').text('今日消费');
+            }
+//            console.log($('#EndDate').val().substr(5,2));
+            $('.content-list ul li').remove();
+            $('.box-title-last').remove();
+            getListMoney(page);
+        });//按照金额排序
+
+        $('.sort-type').click(function(){
+            $('.show-type').toggle();
+        });
+        $('.sort-type label').click(function () {
+            $('.sort-type label').removeClass('active');
+            $(this).addClass('active');
+            $('.show-type').toggle();
+            var chekced = $(this).siblings('input').val();
+            if(chekced==1){
+                $('.statistics-box').css('display','block');
+                $('.box-type-1').css('display','none');
+
+            }else if(chekced==2){
+                $('.statistics-box').css('display','block');
+                $('.box-type-0').css('display','none');
+            }else {
+                $('.statistics-box').css('display','block');
+            }
+        });
+    });
+
+    function getList(page) {
+        if(page>0){
+            if(page<10){
+                page= '0'+page
+            }
+            $('.spinner').addClass('opacity2');
+            consumptionRecord(page);
+            $(window).unbind('scroll');
+            $(window).scroll(function () {
+                var moreHeight =  $('.more').offset().top;
+//                console.log(moreHeight);
+                var heightScroll = $(document).scrollTop()+$(window).height();
+//                console.log(heightScroll);
+                if(moreHeight < heightScroll && loading2()==0){
+                    getList(page-1);
+                    loading2();
+                }
+                if(page==1){
+                    $(window).unbind('scroll');
+                    $('.more span').text('没有更多了');
+                    $('.spinner').fadeOut();
+                    var h = $(window).height() - $('.more').offset().top;
+                    $('.more').css('height',h+30);
+                }
+            })
+        }
+        if(page==0){
+            $('.more span').text('没有更多了')
+            $('.spinner').fadeOut();
+        }
+    }//获取列表
+
+    function getListMoney(page) {
+        if(page>0){
+            if(page<10){
+                page= '0'+page
+            }
+            consumptionRecordMoney(page);
+            $(window).unbind('scroll');
+            $(window).scroll(function () {
+                var moreHeight =  $('.more').offset().top+50;
+//                console.log(moreHeight);
+                var heightScroll = $(document).scrollTop()+$(window).height();
+//                console.log(heightScroll);
+                if(moreHeight < heightScroll && loading1()==0){
+                    getListMoney(page-1);
+                    loading1();
+                }
+                if(page==1){
+                    $(window).unbind('scroll');
+                    $('.more span').text('没有更多了');
+                    $('.spinner').fadeOut();
+                    var h = $(window).height() - $('.more').offset().top;
+                    $('.more').css('height',h+30)
+                }
+            });
+        }
+        if(page==0){
+            $(window).unbind('scroll');
+            $('.more span').text('没有更多了');
+            $('.spinner').fadeOut();
+        }
+    }//按金额获取列表
+
+    function consumptionRecord(page) {
+        var date =$('#EndDate').val();
+        date = date.substr(0,8)+page;
+        $.ajax({
+            type:'get',
+            url:IP+'/pages/ecards/tradeRecord',
+            data:{
+                openid:openid,
+                date:date
+            },
+//            rossDomain: true,
+//            xhrFields: {            //带上Cookie
+//                withCredentials: true
+//            },
+            success:function (res){
+                var html ='';
+                var data =[];
+                if(res.data==null){
+                    res.data=[];
+                }
+                data = res.data;
+//                console.log(data);
+                if(!res.data[0]){
+                    --page;
+                    loading2= (function () {
+                        var load = 0;
+                        return function () {
+                            return load++;
+                        }
+                    })();
+                    getList(page)
+                } else if(res.code==0){
+                    if(date != nowDate&&add()==0){
+                        $('.now').text(date);
+                        add();
+                    }
+                    html='<div class="box-title box-title-last">\n' +
+                        '        <span class="title-time box-title-last">'+ date+'</span>\n' +
+                        '    </div>';
+                    loading2= (function () {
+                        var load = 0;
+                        return function () {
+                            return load++;
+                        }
+                    })();
+                    for(var i=0;i<res.data.length;i++){
+
+                        html += ' <li class="statistics-box box-type-'+data[i].tradeType +'">\n' +
+                            '                <div class="box-content">\n' +
+                            '                   <div class="type bg-'+data[i].tradeType +' noP-aside">食</div>\n' +
+                            '                   <div class="details">\n' +
+                            '                       <div class="address">'+data[i].termName +'</div>\n' +
+                            '                       <div class="time">' +data[i].tradeTime+ '</div>\n' +
+                            '                   </div>\n' +
+                            '                   <div class="money"><span class="type-'+data[i].tradeType +'">-</span> '+data[i].amount/100+'</div>\n' +
+                            '                </div>\n' +
+                            '            </li>'
+                    }
+                }
+                $('.content-list ul').append(html);
+                $('.statistics-box .bg-1').text('充');
+                $('.type-1').text('+');
+                $('.content-list ul .box-title:first-child').css('display','none');
+                var chekcedType = $('input[name="type"]:checked').val();
+                if(chekcedType==1){
+                    $('.statistics-box').css('display','block');
+                    $('.box-type-1').css('display','none')
+                }else if(chekcedType==2){
+                    $('.statistics-box').css('display','block');
+                    $('.box-type-0').css('display','none')
+                }else {
+                    $('.statistics-box').css('display','block');
+                }
+                if($('.more').offset().top < $(window).height()){
+                    var h = $(window).height() - $('.more').offset().top;
+                    $('.more').css('height',h+30)
+                }else {
+                    $('.more').css('height',40)
+                }
+            },
+            error:function (){
+//                alert("通知列表请求失败，请检查网络");
+                loading2= (function () {
+                    var load = 0;
+                    return function () {
+                        return load++;
+                    }
+                })();
+            }
+        });
+//      console.log(page)
+        return page
+    }//获取消费记录
+
+    function consumptionRecordMoney(page) {
+        var date =$('#EndDate').val();
+        date = date.substr(0,8)+page;
+        $.ajax({
+            type:'get',
+            url:IP+'/pages/ecards/tradeRecord',
+            data:{
+                openid:openid,
+                date:date
+            },
+//            rossDomain: true,
+//            xhrFields: {            //带上Cookie
+//                withCredentials: true
+//            },
+            success:function (res){
+                var html ='';
+                var data =[];
+                var wait = true;
+                if(res.data==null){
+                    res.data= [];
+                }
+                data = res.data;
+//                console.log(data);
+                if(!res.data[0]){
+                    --page;
+                    loading1= (function () {
+                        var load = 0;
+                        return function () {
+                            return load++;
+                        }
+                    })();
+                    getListMoney(page)
+                }
+                else {
+//                    console.log(page)
+                    if(date != nowDate && add() == 0){
+                        $('.now').text(date);
+                        wait = false;
+                        add();
+                    }
+                    html='<div class="box-title box-title-last">\n' +
+                        '        <span class="title-time box-title-last">'+ date+'</span>\n' +
+                        '    </div>';
+                    if($('.sort-money').hasClass('.top')){
+                        data.sort(function (a, b) {
+                            return b.amount - a.amount;
+                        });
+                    }else {
+                        data.sort(function (a, b) {
+                            return a.amount - b.amount;
+                        });
+                    }
+                    loading1= (function () {
+                        var load = 0;
+                        return function () {
+                            return load++;
+                        }
+                    })();
+                    for(var i=0;i<res.data.length;i++){
+                        html += ' <li class="statistics-box box-type-'+data[i].tradeType +'">\n' +
+                            '                <div class="box-content">\n' +
+                            '                   <div class="type bg-'+data[i].tradeType +' noP-aside">食</div>\n' +
+                            '                   <div class="details">\n' +
+                            '                       <div class="address">'+data[i].termName +'</div>\n' +
+                            '                       <div class="time">' +data[i].tradeTime+ '</div>\n' +
+                            '                   </div>\n' +
+                            '                   <div class="money"><span class="type-'+data[i].tradeType +'">-</span> '+data[i].amount/100+'</div>\n' +
+                            '                </div>\n' +
+                            '            </li>'
+                    }
+                }
+                $('.content-list ul').append(html);
+                $('.statistics-box .bg-1').text('充');
+                $('.type-1').text('+');
+                $('.content-list ul .box-title:first-child').css('display','none');
+                var chekcedType = $('input[name="type"]:checked').val();
+                if(chekcedType==1){
+                    $('.statistics-box').css('display','block');
+                    $('.box-type-1').css('display','none')
+                }else if(chekcedType==2){
+                    $('.statistics-box').css('display','block');
+                    $('.box-type-0').css('display','none')
+                }else {
+                    $('.statistics-box').css('display','block');
+                }
+                if($('.more').offset().top < $(window).height()){
+                    var h = $(window).height() - $('.more').offset().top;
+                    $('.more').css('height',h+30)
+                }else {
+                    $('.more').css('height',40)
+                }
+            },
+            error:function (){
+//                alert("通知列表请求失败，请检查网络");
+                loading1= (function () {
+                    var load = 0;
+                    return function () {
+                        return load++;
+                    }
+                })();
+            }
+        });
+//      console.log(page)
+        return page
+    }//按金额获取内容
+
+    function getNowFormatDate() {
+        var date = new Date();
+        var seperator1 = "-";
+        var month = date.getMonth() + 1;
+        var strDate = date.getDate();
+        if (month >= 1 && month <= 9) {
+            month = "0" + month;
+        }
+        if (strDate >= 0 && strDate <= 9) {
+            strDate = "0" + strDate;
+        }
+        var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate;
+        return currentdate;
+    }//获取当前时间
+
+    function getBalance() {
+        $.ajax({
+            type:'get',
+            url:IP+'/pages/ecards/currentMoney',
+            data:{
+                openid:openid
+            },
+//            rossDomain: true,
+//            xhrFields: {            //带上Cookie
+//                withCredentials: true
+//            },
+            success:function (res){
+                var data =res.data;
+                if(!data){
+                    $('.balance-number').text('?');
+                }else {
+                    data = data/100;
+                    $('.balance-number').text(data.toFixed(2))
+                }
+            },
+            error:function (){
+//                alert("通知列表请求失败，请检查网络")
+            }
+        });
+    }//获取余额
+
+    var add =(function () {
+        var count = 0;
+        return function () {
+            return count++;
+        }
+    })();
+
+    var loading2= (function () {
+        var load = 0;
+        return function () {
+            return load++;
+        }
+    })();
+
+    var loading1= (function () {
+        var load = 0;
+        return function () {
+            return load++;
+        }
+    })();
+
+    function getUrlParams() {
+        var queryString = window.location.search.substr(1);
+
+        var argsArr = queryString.split('&');
+        if (argsArr[0] === '') {
+            argsArr.shift();
+        }
+        var argsObj = {};
+        for (var i = 0; i < argsArr.length; i++) {
+            var args = argsArr[i].split('=');
+            argsObj[args[0]] = args[1];
+        }
+        return argsObj;
+    }
+
+    function getDayAgo(time) {
+
+        var now = new Date(time);
+        var date = new Date(now.getTime() - 24 * 3600 * 1000);
+        var seperator1 = "-";
+        var month = date.getMonth() + 1;
+        var strDate = date.getDate();
+        if (month >= 1 && month <= 9) {
+            month = "0" + month;
+        }
+        if (strDate >= 0 && strDate <= 9) {
+            strDate = "0" + strDate;
+        }
+        var currentdate = date.getFullYear() + seperator1 + month+seperator1+strDate;
+        return currentdate;
+    }//获取一天前时间
+
+</script>
+</html>

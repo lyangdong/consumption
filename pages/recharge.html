@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <title>充值</title>
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/recharge.css">
+
+    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="recharge">
+    <div class="nav"><a class="glyphicon glyphicon-chevron-left back-btn" ></a><span class="recharge-nav">充值</span></div>
+    <div class="recharge-box recharge-type">
+        <div class="recharge-title">支付方式</div>
+        <ul>
+            <li>
+                <label for="weChat" class="active">微信支付</label>
+                <input type="radio" name="type" value="1" id="weChat" checked>
+            </li>
+            <li>
+                <label for="Alipay">支付宝支付</label>
+                <input type="radio" name="type" value="2" id="Alipay">
+            </li>
+            <li>
+                <label for="bankCard">借记卡支付</label>
+                <input type="radio" name="type" value="3" id="bankCard">
+            </li>
+        </ul>
+    </div>
+    <div class="recharge-box recharge-money">
+        <div class="recharge-title">充值金额</div>
+        <ul>
+            <li>
+                <label for="number30" class="active">30元</label>
+                <input type="radio" name="money" value="30" id="number30">
+            </li>
+            <li>
+                <label for="number50">50元</label>
+                <input type="radio" name="money" value="50" id="number50">
+            </li>
+            <li>
+                <label for="number100" class="">100元</label>
+                <input type="radio" name="money" value="100" id="number100" checked>
+            </li>
+            <li>
+                <label for="number200">200元</label>
+                <input type="radio" name="money" value="200" id="number200">
+            </li>
+            <li>
+                <label for="number500" class="">500元</label>
+                <input type="radio" name="money" value="500" id="number500" checked>
+            </li>
+            <li>
+                <input type="number" name="money" value="" id="otherNumber" placeholder="其它金额">
+            </li>
+        </ul>
+        <div class="money-number">
+            <span id="money">30</span>
+            <label for="money">元</label>
+        </div>
+    </div>
+    <div class="footer">
+        <button class="btn btn-primary">确&nbsp;&nbsp;&nbsp;定</button>
+        <!--<a  class="btn btn-primary" href="">确&nbsp;&nbsp;&nbsp;定</a>-->
+    </div>
+</div>
+</body>
+<script src="http://pv.sohu.com/cityjson?ie=utf-8"></script>
+<script>
+
+//    $('.recharge-btn').click(function () {
+//        var str=  $('input[name=type]:checked').val();
+//        console.log(str)
+//    })
+    $(function () {
+
+        var IP = 'http://192.168.0.208:8090'; //唐青
+//        var IP ='http://120.78.195.17:8080';
+        var obj = getUrlParams();
+        var openid = sessionStorage.openid;
+        var extra= '';
+        var amount = 0;
+        var pay_channel = 'wx_web_h5';
+        var returnUrl='';
+        var subject='充值';
+        var body = '一卡通充值';
+        var complete_url = '';
+        var show_url=IP+'';
+        var user_ip = returnCitySN["cip"];
+//        console.log(userIp);
+        var height = $(window).height();
+        $('.recharge').css('height',height);
+        $('.back-btn').attr('href','ecard.html?openid='+openid);
+
+        $('.recharge-type li label').click(function () {
+            $('.recharge-type li label').removeClass('active');
+            $(this).addClass('active')
+            });//支付方式选择
+        $('.recharge-money li label').click(function () {
+            $('.recharge-money li label').removeClass('active');
+            $(this).addClass('active');
+//            console.log($(this).siblings('input').val())
+            $('#money').text($(this).siblings('input').val());
+            $('#otherNumber').val('')
+        });//金额选择
+        $('#otherNumber').change(function () {
+            $('.recharge-money li label').removeClass('active');
+            $('#money').text($('#otherNumber').val());
+        });
+        $('#otherNumber').on('input propertychange',function () {
+            $('.recharge-money li label').removeClass('active');
+            if($('#otherNumber').val()>2000){
+                $('#otherNumber').val(2000)
+            }
+            $('#money').text($('#otherNumber').val());
+        });//自选金额
+        $('.footer button').click(function () {
+            amount = $('#money').text()*100;
+//            pay_channel = $('input[name="type"]:checked').val();
+            returnUrl= 'rechargeSuccess.html?openid='+obj.openid + '&money='+ amount ;
+            $.ajax({
+                type:'post',
+                url:IP+'/api/bank_unify_pay',
+                data:{
+                    bankName:"tianfupay",
+                    openid:openid,
+                    subject:subject,
+                    body:body,
+                    amount:amount,
+                    showUrl:show_url,
+                    clientIp:user_ip,
+                    payChannel:pay_channel,
+                    extra:extra
+                },
+                success:function (res){
+                    document.write(res.data);
+                },
+                error:function (){
+                }
+            });
+
+        })
+    });
+
+    function getUrlParams() {
+        var queryString = window.location.search.substr(1);
+
+        var argsArr = queryString.split('&');
+        if (argsArr[0] === '') {
+            argsArr.shift();
+        }
+        var argsObj = {};
+        for (var i = 0; i < argsArr.length; i++) {
+            var args = argsArr[i].split('=');
+            argsObj[args[0]] = args[1];
+        }
+        return argsObj;
+    }
+
+</script>
+</html>

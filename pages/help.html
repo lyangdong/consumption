@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <title>帮助</title>
+
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/help.css">
+
+    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdn.bootcss.com/echarts/3.7.2/echarts.min.js"></script>
+    <style>
+        .back{
+            display: inline-block;
+            padding: 8px 12px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+ <div class="">
+     <span><a class="back" href="#">返回</a></span>
+     <h4>常见问题</h4>
+     <ul>
+         <li class="help-title">1.余额显示为“?”。</li>
+         <li class="help-act">有时因为信息机网络延迟，余额信息还没有传到数据库。导致没能获取到信息，等信息机获取到信息后即可显示正常的余额。</li>
+     </ul>
+ </div>
+
+</body>
+<script>
+    var openid = sessionStorage.openid;
+    $('.back').attr('href','/pages/ecard.html?openid='+ openid)
+</script>
+</html>
