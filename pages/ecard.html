@@ -68,7 +68,7 @@
     <div class="box-title box-title-first">
         <span class="title-time now">今日消费</span>
         <span>
-            <input id="EndDate" runat="server"  readonly="readonly" style="width:30%;" value="123" />
+            <input id="EndDate" runat="server"  readonly="readonly" style="width:30%;" value=""/>
         </span>
     </div>
     <ul>
@@ -117,7 +117,7 @@
     var openid =obj.openid;
     var page = 31;
     var oneDay = getDayAgo(nowDate);
-    var titleHeight =0;
+//    var titleHeight =0;
     sessionStorage.openid = obj.openid;
     //    var moreHeight =  $('.more').offset().top;
     //    var heightScroll = $(document).scrollTop()+$(window).height();
@@ -157,7 +157,7 @@
         if(nowDate.substr(-2,2) !='01' && nowDate.substr(-2,2)<10){
             getList(oneDay.substr(-1,2));
         }else if(nowDate.substr(-2,2) !='01' && nowDate.substr(-2,2)>9){
-            getList(oneDay.substr(-2,2));
+            getList(oneDay.substr(-1,1));
         } else {
             getList(nowDate.substr(-1,2));
         }
@@ -228,6 +228,8 @@
     });
 
     function getList(page) {
+        $('#EndDate').attr('disabled',"true");
+//        $('#EndDate').removeAttr("disabled");
         if(page>0){
             if(page<10){
                 page= '0'+page
@@ -236,7 +238,7 @@
             consumptionRecord(page);
             $(window).unbind('scroll');
             $(window).scroll(function () {
-                var moreHeight =  $('.more').offset().top;
+                var moreHeight =  $('.more').offset().top+30;
 //                console.log(moreHeight);
                 var heightScroll = $(document).scrollTop()+$(window).height();
 //                console.log(heightScroll);
@@ -250,12 +252,18 @@
                     $('.spinner').fadeOut();
                     var h = $(window).height() - $('.more').offset().top;
                     $('.more').css('height',h+30);
+                    setTimeout(function () {
+                        $('#EndDate').removeAttr("disabled");
+                    },500);
                 }
             })
         }
         if(page==0){
-            $('.more span').text('没有更多了')
+            $('.more span').text('没有更多了');
             $('.spinner').fadeOut();
+            setTimeout(function () {
+                $('#EndDate').removeAttr("disabled");
+            },500);
         }
     }//获取列表
 
@@ -264,10 +272,11 @@
             if(page<10){
                 page= '0'+page
             }
+            $('#EndDate').attr('disabled',"true");
             consumptionRecordMoney(page);
             $(window).unbind('scroll');
             $(window).scroll(function () {
-                var moreHeight =  $('.more').offset().top+50;
+                var moreHeight =  $('.more').offset().top+30;
 //                console.log(moreHeight);
                 var heightScroll = $(document).scrollTop()+$(window).height();
 //                console.log(heightScroll);
@@ -280,7 +289,10 @@
                     $('.more span').text('没有更多了');
                     $('.spinner').fadeOut();
                     var h = $(window).height() - $('.more').offset().top;
-                    $('.more').css('height',h+30)
+                    $('.more').css('height',h+30);
+                    setTimeout(function () {
+                        $('#EndDate').removeAttr("disabled");
+                    },500);
                 }
             });
         }
@@ -288,6 +300,9 @@
             $(window).unbind('scroll');
             $('.more span').text('没有更多了');
             $('.spinner').fadeOut();
+            setTimeout(function () {
+                $('#EndDate').removeAttr("disabled");
+            },500);
         }
     }//按金额获取列表
 
@@ -336,8 +351,10 @@
                             return load++;
                         }
                     })();
+                   setTimeout(function () {
+                       $('#EndDate').removeAttr("disabled");
+                   },1000);
                     for(var i=0;i<res.data.length;i++){
-
                         html += ' <li class="statistics-box box-type-'+data[i].tradeType +'">\n' +
                             '                <div class="box-content">\n' +
                             '                   <div class="type bg-'+data[i].tradeType +' noP-aside">食</div>\n' +
@@ -443,6 +460,9 @@
                             return load++;
                         }
                     })();
+                    setTimeout(function () {
+                        $('#EndDate').removeAttr("disabled");
+                    },1000);//移除时间控件不可点击属性
                     for(var i=0;i<res.data.length;i++){
                         html += ' <li class="statistics-box box-type-'+data[i].tradeType +'">\n' +
                             '                <div class="box-content">\n' +
