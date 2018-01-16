@@ -154,11 +154,13 @@
 
         $("#EndDate").mobiscroll($.extend(opt['date'], opt['default']));//年月日型
 
+//        console.log(nowDate.substr(-2,2));
         if(nowDate.substr(-2,2) !='01' && nowDate.substr(-2,2)<10){
-            getList(oneDay.substr(-1,2));
-        }else if(nowDate.substr(-2,2) !='01' && nowDate.substr(-2,2)>9){
             getList(oneDay.substr(-1,1));
-        } else {
+        }else if(nowDate.substr(-2,2) !='01' && nowDate.substr(-2,2)>9){
+            getList(oneDay.substr(-2,2));
+        }else {
+//            console.log(321);
             getList(nowDate.substr(-1,2));
         }
 
@@ -171,11 +173,12 @@
                     return count++;
                 }
             })();
+            page =31;
             if($('#EndDate').val().substr(5,2)==nowDate.substr(5,2)){
                 $('.now').text('今日消费');
+                nowDate.substr(-2,2)>9?page=nowDate.substr(-2,2)-1:page=nowDate.substr(-1,1)-1;
             }
 //        console.log($('#EndDate').val());
-            page =31;
             $('.content-list ul li').remove();
             $('.box-title-last').remove();
             getList(page);
