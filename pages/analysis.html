@@ -13,15 +13,21 @@
     <script src="https://cdn.bootcss.com/echarts/3.7.2/echarts.min.js"></script>
 </head>
 <body>
-<div class="header">
-    <ul>
-        <li class="back col-xs-3"><a href="time-choose.html">返回</a></li>
-        <li class="analysis-title">统计分析</li>
-    </ul>
-    <div style="clear: both;"></div>
-</div>
+<!--<div class="header">-->
+    <!--<ul>-->
+        <!--<li class="back col-xs-3"><a href="time-choose.html">返回</a></li>-->
+        <!--<li class="analysis-title">统计分析</li>-->
+    <!--</ul>-->
+    <!--<div style="clear: both;"></div>-->
+<!--</div>-->
 <div class="formBox">
-    <div class="form-date">2017-12-7</div>
+    <div class="form-date">
+        <span class="nowDate">2018-01</span>
+        <div class="box-title box-title-first">
+            <a href=""></a>
+        </div>
+        <div class="box-line"></div>
+    </div>
     <div class="form-title"><span></span>消费趋势</div>
     <div id ="dateForm" style="width:100%;height: 170px;" class="col-xs-12 mgt-12"></div>
 </div>
@@ -38,12 +44,15 @@
     var openid =1511424125228100;
     var obj  = getUrlParams();
     openid = obj.openid;
-    $('.header li a').attr('href','time-choose.html?openid='+openid +'');
+//    $('.header li a').attr('href','time-choose.html?openid='+openid +'');
+    $('.box-title a').attr('href','time-choose.html?openid='+openid +'')
     getFormdata();
     getCircle();
 
     //    var obj = getUrlParams();
 //   console.log(obj);
+
+
     function getFormdata() {
         if(obj.type == 1){
             var formType = '日';
@@ -80,7 +89,7 @@
                 type:obj.type
             },
             success:function (res){
-                $('.form-date').text(obj.endDate);
+                $('.form-date .nowDate').text(obj.endDate);
                 var data = res.data;
                 var timeArr=[];
                 var counterArr=[];

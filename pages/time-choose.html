@@ -19,13 +19,13 @@
     <link href="../mobiscroll/css/mobiscroll_003.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-<div class="header">
-    <ul>
-        <li class="back col-xs-3"><a href="ecard.html">返回</a></li>
-        <li class="col-xs-6 mgt-12 text-center">选择时间</li>
-        <li class="finish col-xs-3"><a id="finish" href="analysis.html?type=2&startDate=&endDate=2">完成</a></li>
-    </ul>
-</div>
+<!--<div class="header">-->
+    <!--<ul>-->
+        <!--<li class="back col-xs-3"><a href="ecard.html">返回</a></li>-->
+        <!--<li class="col-xs-6 mgt-12 text-center">选择时间</li>-->
+        <!--<li class="finish col-xs-3"><a id="finish" href="analysis.html?type=2&startDate=&endDate=2">完成</a></li>-->
+    <!--</ul>-->
+<!--</div>-->
 <div id="choose">
     <div class="choose date-choose"  href="#date" data-toggle="tab">按月选择<span></span><i></i></div>
     <div class="choose month-choose" href="#month" data-toggle="tab">按日选择<span></span><i></i></div>
@@ -41,10 +41,19 @@
         <input id="endDate" runat="server"  readonly="readonly"  value="" />
     </div>
 </div>
+<div class="time-choose-btn">
+    <button  class="finish btn btn-primary">
+        <a style="color: white" id="finish" href="analysis.html?type=2&startDate=&endDate=2">完成</a>
+    </button>
+    <button  class="back btn btn-default">
+        <a style="color: black"  href="analysis.html?type=2&startDate=&endDate=2">返回</a>
+    </button>
+</div>
 
 </body>
 
 <script>
+
     var obj =getUrlParams();
 
     var nowDate = getNowFormatDate();
@@ -121,7 +130,6 @@
     //    console.log(t);
 
     function getMonthAgo(time) {
-
         var now = new Date(time);
         var date = new Date(now.getTime() - 30 * 24 * 3600 * 1000);
         var seperator1 = "-";
@@ -138,7 +146,6 @@
     }//获取一月前时间
 
     function getWeekAgo() {
-
         var now = new Date();
         var date = new Date(now.getTime() - 7 * 24 * 3600 * 1000);
         var seperator1 = "-";
@@ -155,7 +162,6 @@
     }//获取一周前时间
 
     function getHalfYearAgo(time) {
-
         var now = new Date(time);
         var date = new Date(now.getTime() - 6 * 30 * 24 * 3600 * 1000);
         var seperator1 = "-";

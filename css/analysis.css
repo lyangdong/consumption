@@ -32,10 +32,32 @@ li{
 .analysis-title{
     margin-left: 15px;
 }
+.box-title{
+    display: block;
+    position: absolute;
+    right: 20px;
+    top: 10px;
+}
+.box-line{
+    height: 2px;
+}
+.box-title a{
+    display: inline-block;
+    border: none;
+    float: right;
+    width: 22px!important;
+    height: 22px;
+    font-size: 0;
+    background:url("../img/3.png")no-repeat ;
+    background-size: 100%;
+    color: #EFEFF4;
+    z-index: 20;
+}
 .form-date{
-    padding: 6px;
-    border-bottom: 1px black solid;
+    padding: 10px 8px;
+    border-bottom: 2px black solid;
     margin-bottom: 15px;
+    position: relative;
 }
 .form-title{
     display: inline-block;

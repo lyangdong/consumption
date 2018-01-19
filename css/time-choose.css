@@ -26,8 +26,20 @@ li{
 .back{
     border-right: 1px lightgrey solid;
 }
-.finish{
-    border-left: 1px lightgrey solid;
+.time-choose-btn{
+    margin-top: 100px;
+}
+.time-choose-btn button{
+    display: block;
+    width: 70%;
+    margin: 20px auto;
+    padding: 0;
+}
+.time-choose-btn a{
+    display: inline-block;
+    height: 100%;
+    padding: 10px;
+    width: 100%;
 }
 .choose{
     background-color: #F5F5F5;

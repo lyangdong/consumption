@@ -21,11 +21,11 @@
                 <input type="radio" name="type" value="1" id="weChat" checked>
             </li>
             <li>
-                <label for="Alipay">支付宝支付</label>
+                <label for="Alipay" class="disabled">支付宝支付</label>
                 <input type="radio" name="type" value="2" id="Alipay">
             </li>
             <li>
-                <label for="bankCard">借记卡支付</label>
+                <label for="bankCard" class="disabled">借记卡支付</label>
                 <input type="radio" name="type" value="3" id="bankCard">
             </li>
         </ul>
@@ -92,6 +92,8 @@
         var user_ip = returnCitySN["cip"];
 //        console.log(userIp);
         var height = $(window).height();
+
+
         $('.recharge').css('height',height);
         $('.back-btn').attr('href','ecard.html?openid='+openid);
 
@@ -126,7 +128,7 @@
                 url:IP+'/api/bank_unify_pay',
                 data:{
                     bankName:"tianfupay",
-                    openid:openid,
+                    openid:obj.openid,
                     subject:subject,
                     body:body,
                     amount:amount,
