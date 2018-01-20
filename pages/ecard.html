@@ -6,12 +6,13 @@
     <title>消费记录</title>
 
     <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.bootcss.com/layer/3.0.3/skin/default/layer.min.css" rel="stylesheet">
+    <!--<link href="https://cdn.bootcss.com/layer/3.0.3/skin/default/layer.min.css" rel="stylesheet">-->
+    <!--<base href="http://120.78.195.17:8080/pages/">-->
     <link rel="stylesheet" href="../css/style.css">
 
     <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="https://cdn.bootcss.com/layer/3.0.3/layer.min.js"></script>
+    <!--<script src="https://cdn.bootcss.com/layer/3.0.3/layer.min.js"></script>-->
     <script src="../mobiscroll/js/mobiscroll_002.js" type="text/javascript"></script>
     <script src="../mobiscroll/js/mobiscroll_004.js" type="text/javascript"></script>
     <link href="../mobiscroll/css/mobiscroll_002.css" rel="stylesheet" type="text/css">
@@ -251,6 +252,8 @@
     var strArr  =[];
     var endDate = getNowFormatDate();
     var startDate = getHalfYearAgo(endDate);
+//var canteenArr = ['消费机','消费机1','消费机2','消费机3'];
+//var hydropower = ['消费机4','消费机5','消费机6','消费机7'];
     console.log(endDate);
     endDate = endDate.substr(0,7);
     sessionStorage.openid = obj.openid;
@@ -343,7 +346,6 @@
             $('.statistics-box').each(function (i) {
                 var money = $(this).find('.money-number').text()*100;
                 if(money>=minMoney && money<=maxMoney){
-                    console.log(this);
                     $(this).css('display','block')
                 }
             });

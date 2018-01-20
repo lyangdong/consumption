@@ -63,7 +63,7 @@
         </div>
     </div>
     <div class="footer">
-        <button class="btn btn-primary">确&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;定</button>
+        <button class="btn btn-primary btn-recharge">确&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;定</button>
         <!--<button class="btn btn-default back"><a  href="">返回首页</a></button>-->
     </div>
 </div>
@@ -120,7 +120,7 @@
             }
             $('#money').text($('#otherNumber').val());
         });//自选金额
-        $('.footer button').click(function () {
+        $('.footer .btn-recharge').click(function () {
             amount = $('#money').text()*100;
 //            pay_channel = $('input[name="type"]:checked').val();
             returnUrl= 'rechargeSuccess.html?openid='+obj.openid + '&money='+ amount ;
@@ -139,15 +139,19 @@
                     extra:extra
                 },
                 success:function (res){
-                    document.write(res.data);
+//                    document.write(res.data);
+                   var  result = JSON.parse(res.data);
+                    if(result.retCode=='0000'){
+                        window.location.href= result.returnMsg;
+                    }else {
+                        document.write('充值失败')
+                    }
                 },
                 error:function (){
                 }
             });
-
         })
     });
-
     function getUrlParams() {
         var queryString = window.location.search.substr(1);
 
