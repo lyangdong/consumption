@@ -34,7 +34,7 @@
 <div class="">
     <div class="form-title"><span></span>总消费</div>
     <div class="circle-title">0</div>
-    <div id ="dateCircle" style="width:100%;height: 240px;" class="col-xs-12 mgt-12"></div>
+    <div id ="dateCircle" style="width:100%;height: 260px;" class="col-xs-12 mgt-12"></div>
 </div>
 </body>
 
@@ -44,8 +44,10 @@
     var openid =1511424125228100;
     var obj  = getUrlParams();
     openid = obj.openid;
+    var canteenArr = ['消费机','消费机1','消费机2','消费机3'];
+    var hydropower = ['消费机4','消费机5','消费机6','消费机7'];
 //    $('.header li a').attr('href','time-choose.html?openid='+openid +'');
-    $('.box-title a').attr('href','time-choose.html?openid='+openid +'')
+    $('.box-title a').attr('href','time-choose.html?openid='+openid +'');
     getFormdata();
     getCircle();
 
@@ -190,24 +192,41 @@
             },
             success:function (res){
                 var data = res.data;
-//                console.log(data);
-                var nameArr=[];
-                var counterArr=[];
+                var nameArr=[
+                    {name:"小卖部"},
+                    {name:"水电"},
+                    {name:"食堂"}];
+                var counterArr=[
+                    {name:'小卖部',value:0},
+                    {name:'水电',value:0},
+                    {name:'食堂',value:0}
+                ];
                 var number = 0;
+//                var counter={};
+//                var name;
                 for(var i =0;i<data.length;i++){
-                    var counter={};
-                    counter.value = data[i].counter/100;
-                    counter.name = data[i].termName;
-                    var name = data[i].termName;
-                    nameArr.push(name);
-                    counterArr.push(counter);
+                    if(canteenArr.indexOf(data[i].termName)>=0){
+                        counterArr[0].value += data[i].counter
+                    }else if(hydropower.indexOf(data[i].termName)>=0){
+                        counterArr[1].value += data[i].counter
+                    }else {
+                        counterArr[2].value += data[i].counter
+                    }
+//                    counter.value = data[i].counter/100;
+//                    counter.name = data[i].termName;
+//                    name = data[i].termName;
+//                    counterArr.push(counter);
                     number +=  data[i].counter/100;
+                }
+                for(var j =0;j<counterArr.length;j++){
+                    counterArr[j].value =  counterArr[j].value/100
                 }
                 $('.circle-title').text('-'+number);
                 option2 = {
                     tooltip: {
                         trigger: 'item',
                         formatter: "{a} <br/>{b}: {c} ({d}%)"
+
                     },
                     legend: {
                         type: 'scroll',
@@ -235,6 +254,57 @@
                                         textStyle : {
                                             fontSize : '18',
                                             fontWeight : 'bold'
+                                        }
+                                    }
+                                }
+                            },
+                            label: {
+                                normal: {
+                                    formatter:'{b|{b}}\n{c|{c}}',
+                                    backgroundColor: '#f7f7f7',
+                                    borderColor: '#f6f6f6',
+                                    padding:[0,6,0,6],
+                                    borderWidth: 1,
+                                    borderRadius: 1,
+                                    // shadowBlur:3,
+                                    // shadowOffsetX: 2,
+                                    // shadowOffsetY: 2,
+                                    // shadowColor: '#999',
+                                    // padding: [0, 7],
+                                    rich: {
+                                        a: {
+                                            color: '#999',
+                                            lineHeight:24,
+                                            align: 'center'
+                                        },
+                                        // abg: {
+                                        //     backgroundColor: '#333',
+                                        //     width: '100%',
+                                        //     align: 'right',
+                                        //     height: 22,
+                                        //     borderRadius: [4, 4, 0, 0]
+                                        // },
+                                        hr: {
+                                            borderColor: '#f1f1f1',
+                                            width: '100%',
+                                            borderWidth: 0,
+                                            height: 0
+                                        },
+                                        b: {
+                                            fontSize: 12,
+                                            lineHeight: 24,
+                                            align: 'center'
+                                        },
+                                        c:{
+                                            fontSize: 12,
+                                            lineHeight: 24,
+                                            align: 'center'
+                                        },
+                                        per: {
+                                            color: '#eee',
+                                            backgroundColor: '#334455',
+                                            padding: [10, 4],
+                                            borderRadius: 2
                                         }
                                     }
                                 }
