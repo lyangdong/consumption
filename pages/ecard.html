@@ -7,7 +7,7 @@
 
     <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
     <!--<link href="https://cdn.bootcss.com/layer/3.0.3/skin/default/layer.min.css" rel="stylesheet">-->
-    <!--<base href="http://120.78.195.17:8080/pages/">-->
+    <!--<base href="http://open.babyscloud.com:8080/">-->
     <link rel="stylesheet" href="../css/style.css">
 
     <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
@@ -116,7 +116,7 @@
             <div class="modal-body">
                 <ul class="nav">
                     <li class="col-xs-3 text-left noP-aside sort-type" data-toggle="modal" data-target="#showType">
-                        <a href="javascript:void (0)">账单类型<span class="triangle"></span></a>
+                        <a href="javascript:void (0)">账单类型<span class="triangle triangle-bottom"></span></a>
                     </li>
                 </ul>
                 <div class="filter sort-type">
@@ -157,8 +157,8 @@
             <!--</div>-->
             <div class="modal-body">
                 <ul class="nav">
-                    <li class="col-xs-4 noP-aside sort-address">
-                        <a href="javascript:void (0)">交易地点<span class="triangle"></span></a>
+                    <li class="col-xs-4 noP-aside sort-address" data-toggle="modal" data-target="#showAddress">
+                        <a href="javascript:void (0)">交易地点<span class="triangle triangle-bottom"></span></a>
                     </li>
                 </ul>
                 <div class="filter sort-address">
@@ -199,8 +199,8 @@
             <!--</div>-->
             <div class="modal-body">
                 <ul class="nav">
-                    <li class="col-xs-3 text-left noP-aside sort-money" data-toggle="modal" data-target="#showType">
-                        <a href="javascript:void (0)">交易金额<span class="triangle"></span></a>
+                    <li class="col-xs-3 text-left noP-aside sort-money" data-toggle="modal" data-target="#showMoney">
+                        <a href="javascript:void (0)">交易金额<span class="triangle triangle-bottom"></span></a>
                     </li>
                 </ul>
                 <div class="filter-money sort-money">
@@ -390,7 +390,7 @@
         $('.now').text(date);
         $.ajax({
             type:'get',
-            url:IP+'/pages/ecards/tradeRecord',
+            url:IP+'/data/pages/ecards/tradeRecord',
             data:{
                 openid:openid,
                 date:date
@@ -474,7 +474,7 @@
     function getBalance() {
         $.ajax({
             type:'get',
-            url:IP+'/pages/ecards/currentMoney',
+            url:IP+'/data/pages/ecards/currentMoney',
             data:{
                 openid:openid
             },

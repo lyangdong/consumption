@@ -83,7 +83,7 @@
         }
         $.ajax({
             type:'get',
-            url:IP+'/pages/ecards/tradeStatics',
+            url:IP+'/data/pages/ecards/tradeStatics',
             data:{
                 openid:openid,
                 start:obj.startDate,
@@ -186,7 +186,7 @@
     function getCircle() {
         $.ajax({
             type:'get',
-            url:IP+'/pages/ecards/sector',
+            url:IP+'/data/pages/ecards/sector',
             data:{
                 openid:openid
             },
